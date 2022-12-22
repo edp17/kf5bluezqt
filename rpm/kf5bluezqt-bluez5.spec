@@ -14,6 +14,8 @@ BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  cmake
 BuildRequires:  extra-cmake-modules
 BuildRequires:  doxygen
+BuildRequires:  qt5-qttools
+BuildRequires:  qt5-qttools-qthelp-devel
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -67,7 +69,7 @@ BuildArch:  noarch
 %autosetup -p1 -n %{name}-%{version}/upstream
 
 %build
-%cmake -DBUILD_TESTING=FALSE .
+%cmake -DBUILD_TESTING=FALSE -DBUILD_QCH=TRUE -DDOXYGEN_SKIP_DOT=TRUE .
 %make_build
 
 %install
@@ -77,6 +79,7 @@ doxygen ../doc/Doxyfile
 mkdir -p %{buildroot}/%{_docdir}/%{name}
 mkdir -p %{buildroot}/%{_docdir}/%{name}/search
 cp -r doc/html/* %{buildroot}/%{_docdir}/%{name}/
+mv %{buildroot}/%{_docdir}/qt5/* %{buildroot}/%{_docdir}/%{name}/
 
 %post -p /sbin/ldconfig
 
