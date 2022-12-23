@@ -14,6 +14,8 @@ BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  cmake
 BuildRequires:  extra-cmake-modules
 BuildRequires:  doxygen
+BuildRequires:  qt5-qttools
+BuildRequires:  qt5-qttools-qthelp-devel
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -31,6 +33,7 @@ Patch8:  0008-Add-Manager-monitorObjectManagerInterfaces.-Contribu.patch
 Patch9:  0009-Add-filtering-options-to-DeclarativeDevicesModel.-Co.patch
 Patch10: 0010-Build-with-Qt-5.6.patch
 Patch11: 0011-Add-support-for-KeyboardDisplay-type-agents.patch
+Patch12: 0012-Force-light-mode-in-Doxygen.patch
 
 %description
 This package contains the KF5BluezQt library.
@@ -66,7 +69,7 @@ BuildArch:  noarch
 %autosetup -p1 -n %{name}-%{version}/upstream
 
 %build
-%cmake -DBUILD_TESTING=FALSE .
+%cmake -DBUILD_TESTING=FALSE -DBUILD_QCH=TRUE -DDOXYGEN_SKIP_DOT=TRUE .
 %make_build
 
 %install
@@ -76,6 +79,7 @@ doxygen ../doc/Doxyfile
 mkdir -p %{buildroot}/%{_docdir}/%{name}
 mkdir -p %{buildroot}/%{_docdir}/%{name}/search
 cp -r doc/html/* %{buildroot}/%{_docdir}/%{name}/
+mv %{buildroot}/%{_docdir}/qt5/* %{buildroot}/%{_docdir}/%{name}/
 
 %post -p /sbin/ldconfig
 
