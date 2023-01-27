@@ -9,7 +9,7 @@ Subject: [PATCH] Add support for KeyboardDisplay type agents.
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/agent.h b/src/agent.h
-index 5a92947..da46a14 100644
+index 5a92947d41ab57469dda03c74f3d911d284b8c65..da46a1441ed37488c50713e90d8b32cfa4b72c90 100644
 --- a/src/agent.h
 +++ b/src/agent.h
 @@ -62,7 +62,8 @@ public:
@@ -23,7 +23,7 @@ index 5a92947..da46a14 100644
      Q_ENUM(Capability)
  
 diff --git a/src/manager.cpp b/src/manager.cpp
-index 75b36cc..0673c17 100644
+index 75b36cc8605aebaae9d9b89874075aba5db289dc..0673c173035b791a4568a0491875f9665ca8e5d0 100644
 --- a/src/manager.cpp
 +++ b/src/manager.cpp
 @@ -187,6 +187,9 @@ PendingCall *Manager::registerAgent(Agent *agent)

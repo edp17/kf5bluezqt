@@ -10,7 +10,7 @@ Subject: [PATCH] Add Manager::pairWithDevice(QString) to pair with unknown
  2 files changed, 19 insertions(+)
 
 diff --git a/src/manager.cpp b/src/manager.cpp
-index 4bd0068..38146c2 100644
+index 4bd006825f2682286cfe9b5f8c3c7761080b3df4..38146c2be3e1a39c23ae6f1893db789bc8d241fa 100644
 --- a/src/manager.cpp
 +++ b/src/manager.cpp
 @@ -246,4 +246,13 @@ PendingCall *Manager::unregisterProfile(Profile *profile)
@@ -28,7 +28,7 @@ index 4bd0068..38146c2 100644
 +
  } // namespace BluezQt
 diff --git a/src/manager.h b/src/manager.h
-index b33719a..6860882 100644
+index b33719aeb01c4f43d3d73670e94c3454dc117f42..6860882c18fbb8acb97196362132d4fd09e46281 100644
 --- a/src/manager.h
 +++ b/src/manager.h
 @@ -297,6 +297,16 @@ public:

@@ -9,7 +9,7 @@ Subject: [PATCH] Build with Qt 5.6
  2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed9028e..3c782f0 100644
+index ed9028e2310d190cc6f833349054876b2b605791..3c782f08461e9fec69af4f471cb429fa441eb1cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,7 +34,7 @@ ecm_setup_version(PROJECT
@@ -22,7 +22,7 @@ index ed9028e..3c782f0 100644
  # Required Qt5 components to build this framework
  find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Network)
 diff --git a/src/imports/declarativedevicesmodel.cpp b/src/imports/declarativedevicesmodel.cpp
-index dfcd5f8..a7a2732 100644
+index dfcd5f885ae58bef21218b4c57745e80d46b3e06..a7a2732f08473aa2c46bd3207562cfc921f543ad 100644
 --- a/src/imports/declarativedevicesmodel.cpp
 +++ b/src/imports/declarativedevicesmodel.cpp
 @@ -110,7 +110,6 @@ QVariant DeclarativeDevicesModel::data(const QModelIndex &index, int role) const

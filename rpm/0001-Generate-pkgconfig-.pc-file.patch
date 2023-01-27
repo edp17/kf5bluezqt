@@ -9,7 +9,7 @@ Done upstream on 5.88.0.
  1 file changed, 6 insertions(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 913284e..ed9028e 100644
+index 913284e58f65214c9619611a033ab1cb60c2229a..ed9028e2310d190cc6f833349054876b2b605791 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -20,6 +20,7 @@ include(KDEInstallDirs)

@@ -18,7 +18,7 @@ Contributes to JB#38153
  6 files changed, 53 insertions(+)
 
 diff --git a/src/adapter.cpp b/src/adapter.cpp
-index cc38928..654b86d 100644
+index cc38928765417e79fdf78f5860c0120fe2b23b51..654b86d31f8f17461f39efabc354c081e61f3c27 100644
 --- a/src/adapter.cpp
 +++ b/src/adapter.cpp
 @@ -151,6 +151,11 @@ QList<DevicePtr> Adapter::devices() const
@@ -34,7 +34,7 @@ index cc38928..654b86d 100644
  {
      Q_FOREACH (DevicePtr device, d->m_devices) {
 diff --git a/src/adapter.h b/src/adapter.h
-index 1a00266..aa4c0f6 100644
+index 1a0026663c4fd6df827de0105cd21080a25f49d0..aa4c0f6c56695b71c77969380898f7c9de1f4d92 100644
 --- a/src/adapter.h
 +++ b/src/adapter.h
 @@ -61,6 +61,7 @@ class BLUEZQT_EXPORT Adapter : public QObject
@@ -72,7 +72,7 @@ index 1a00266..aa4c0f6 100644
      explicit Adapter(const QString &path, const QVariantMap &properties);
  
 diff --git a/src/adapter_p.cpp b/src/adapter_p.cpp
-index eb5fa9f..1ab0e11 100644
+index eb5fa9f33590bf8342bcca6db55fa4d8475670a8..1ab0e11fc54b4df2a937097708b2c2d28b2f682c 100644
 --- a/src/adapter_p.cpp
 +++ b/src/adapter_p.cpp
 @@ -37,6 +37,7 @@ AdapterPrivate::AdapterPrivate(const QString &path, const QVariantMap &propertie
@@ -123,7 +123,7 @@ index eb5fa9f..1ab0e11 100644
 +
  } // namespace BluezQt
 diff --git a/src/adapter_p.h b/src/adapter_p.h
-index 734364d..88760fc 100644
+index 734364d60905515c006a7cd632bdc0b8531077e9..88760fc3653eaf3621f6d8ceb3bd946c125edfef 100644
 --- a/src/adapter_p.h
 +++ b/src/adapter_p.h
 @@ -51,6 +51,8 @@ public:
@@ -144,7 +144,7 @@ index 734364d..88760fc 100644
  };
  
 diff --git a/src/imports/declarativeadapter.cpp b/src/imports/declarativeadapter.cpp
-index cdb71a2..13d2338 100644
+index cdb71a28db215d1d36884463c4d1f0a0bfb8db29..13d2338a10c08afbbb98794c4d9a3f51f4133ca4 100644
 --- a/src/imports/declarativeadapter.cpp
 +++ b/src/imports/declarativeadapter.cpp
 @@ -69,6 +69,8 @@ DeclarativeAdapter::DeclarativeAdapter(BluezQt::AdapterPtr adapter, QObject *par
@@ -169,7 +169,7 @@ index cdb71a2..13d2338 100644
  {
      return declarativeDeviceFromPtr(m_adapter->deviceForAddress(address));
 diff --git a/src/imports/declarativeadapter.h b/src/imports/declarativeadapter.h
-index 315e4bd..13f1456 100644
+index 315e4bd8c835568a93f98f0cf2be6156ab494a7e..13f1456521b2aff334edb4da3d095c25e239fa54 100644
 --- a/src/imports/declarativeadapter.h
 +++ b/src/imports/declarativeadapter.h
 @@ -47,6 +47,7 @@ class DeclarativeAdapter : public QObject

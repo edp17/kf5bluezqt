@@ -12,7 +12,7 @@ Subject: [PATCH] Add Manager::monitorObjectManagerInterfaces. Contributes to
  4 files changed, 81 insertions(+), 9 deletions(-)
 
 diff --git a/src/manager.cpp b/src/manager.cpp
-index 38146c2..75b36cc 100644
+index 38146c2be3e1a39c23ae6f1893db789bc8d241fa..75b36cc8605aebaae9d9b89874075aba5db289dc 100644
 --- a/src/manager.cpp
 +++ b/src/manager.cpp
 @@ -82,6 +82,20 @@ bool Manager::setBluetoothBlocked(bool blocked)
@@ -37,7 +37,7 @@ index 38146c2..75b36cc 100644
  {
      return d->m_usableAdapter;
 diff --git a/src/manager.h b/src/manager.h
-index 6860882..d17615a 100644
+index 6860882c18fbb8acb97196362132d4fd09e46281..d17615a19fef11992427f508c95e052860973a72 100644
 --- a/src/manager.h
 +++ b/src/manager.h
 @@ -96,6 +96,7 @@ class BLUEZQT_EXPORT Manager : public QObject
@@ -89,7 +89,7 @@ index 6860882..d17615a 100644
       * Indicates that adapter was added.
       */
 diff --git a/src/manager_p.cpp b/src/manager_p.cpp
-index 9a0e08a..c0bc497 100644
+index 9a0e08a25f8b772363e5b3c5d1fe280b3102ec34..c0bc497807c325b45b0888220a65751ef7453e34 100644
 --- a/src/manager_p.cpp
 +++ b/src/manager_p.cpp
 @@ -46,6 +46,7 @@ ManagerPrivate::ManagerPrivate(Manager *parent)
@@ -163,7 +163,7 @@ index 9a0e08a..c0bc497 100644
  {
      m_loaded = false;
 diff --git a/src/manager_p.h b/src/manager_p.h
-index d7e96b6..cf03612 100644
+index d7e96b6e59184743681490c3d424e17e7b1c545b..cf036128004f9299e77722e68b0e78c416b6561a 100644
 --- a/src/manager_p.h
 +++ b/src/manager_p.h
 @@ -76,6 +76,8 @@ public:
