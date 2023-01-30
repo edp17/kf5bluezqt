@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Martin Kampas <martin.kampas@jolla.com>
+Date: Fri, 27 Jan 2023 10:48:48 +0100
+Subject: [PATCH] Fix qmlplugindump crash
+
+See also https://bugreports.qt.io/browse/QTBUG-44299
+---
+ src/imports/bluezqtextensionplugin.cpp | 76 ++++++++++++++++++--------
+ 1 file changed, 52 insertions(+), 24 deletions(-)
+
+diff --git a/src/imports/bluezqtextensionplugin.cpp b/src/imports/bluezqtextensionplugin.cpp
+index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d1036f39c 100644
+--- a/src/imports/bluezqtextensionplugin.cpp
++++ b/src/imports/bluezqtextensionplugin.cpp
+@@ -41,32 +41,58 @@ static QObject *manager_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
+     return new DeclarativeManager;
+ }
+ 
+-static QJSValue services_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
++class DeclarativeServices : public QObject
++{
++    Q_OBJECT
++    Q_PROPERTY(QString ServiceDiscoveryServer MEMBER ServiceDiscoveryServer CONSTANT)
++    Q_PROPERTY(QString SerialPort MEMBER SerialPort CONSTANT)
++    Q_PROPERTY(QString DialupNetworking MEMBER DialupNetworking CONSTANT)
++    Q_PROPERTY(QString ObexObjectPush MEMBER ObexObjectPush CONSTANT)
++    Q_PROPERTY(QString ObexFileTransfer MEMBER ObexFileTransfer CONSTANT)
++    Q_PROPERTY(QString Headset MEMBER Headset CONSTANT)
++    Q_PROPERTY(QString AudioSource MEMBER AudioSource CONSTANT)
++    Q_PROPERTY(QString AudioVideoRemoteControlTarget MEMBER AudioVideoRemoteControlTarget CONSTANT)
++    Q_PROPERTY(QString AdvancedAudioDistribution MEMBER AdvancedAudioDistribution CONSTANT)
++    Q_PROPERTY(QString AudioVideoRemoteControl MEMBER AudioVideoRemoteControl CONSTANT)
++    Q_PROPERTY(QString HeadsetAudioGateway MEMBER HeadsetAudioGateway CONSTANT)
++    Q_PROPERTY(QString Panu MEMBER Panu CONSTANT)
++    Q_PROPERTY(QString Nap MEMBER Nap CONSTANT)
++    Q_PROPERTY(QString Handsfree MEMBER Handsfree CONSTANT)
++    Q_PROPERTY(QString HandsfreeAudioGateway MEMBER HandsfreeAudioGateway CONSTANT)
++    Q_PROPERTY(QString HumanInterfaceDevice MEMBER HumanInterfaceDevice CONSTANT)
++    Q_PROPERTY(QString SimAccess MEMBER SimAccess CONSTANT)
++    Q_PROPERTY(QString PhonebookAccessServer MEMBER PhonebookAccessServer CONSTANT)
++    Q_PROPERTY(QString MessageAccessServer MEMBER MessageAccessServer CONSTANT)
++    Q_PROPERTY(QString PnpInformation MEMBER PnpInformation CONSTANT)
++
++    const QString ServiceDiscoveryServer = BluezQt::Services::ServiceDiscoveryServer;
++    const QString SerialPort = BluezQt::Services::SerialPort;
++    const QString DialupNetworking = BluezQt::Services::DialupNetworking;
++    const QString ObexObjectPush = BluezQt::Services::ObexObjectPush;
++    const QString ObexFileTransfer = BluezQt::Services::ObexFileTransfer;
++    const QString Headset = BluezQt::Services::Headset;
++    const QString AudioSource = BluezQt::Services::AudioSource;
++    const QString AudioVideoRemoteControlTarget = BluezQt::Services::AudioVideoRemoteControlTarget;
++    const QString AdvancedAudioDistribution = BluezQt::Services::AdvancedAudioDistribution;
++    const QString AudioVideoRemoteControl = BluezQt::Services::AudioVideoRemoteControl;
++    const QString HeadsetAudioGateway = BluezQt::Services::HeadsetAudioGateway;
++    const QString Panu = BluezQt::Services::Panu;
++    const QString Nap = BluezQt::Services::Nap;
++    const QString Handsfree = BluezQt::Services::Handsfree;
++    const QString HandsfreeAudioGateway = BluezQt::Services::HandsfreeAudioGateway;
++    const QString HumanInterfaceDevice = BluezQt::Services::HumanInterfaceDevice;
++    const QString SimAccess = BluezQt::Services::SimAccess;
++    const QString PhonebookAccessServer = BluezQt::Services::PhonebookAccessServer;
++    const QString MessageAccessServer = BluezQt::Services::MessageAccessServer;
++    const QString PnpInformation = BluezQt::Services::PnpInformation;
++};
++
++static QObject *services_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
+ {
+     Q_UNUSED(engine)
++    Q_UNUSED(scriptEngine)
+ 
+-    QJSValue object = scriptEngine->newObject();
+-    object.setProperty(QStringLiteral("ServiceDiscoveryServer"), BluezQt::Services::ServiceDiscoveryServer);
+-    object.setProperty(QStringLiteral("SerialPort"), BluezQt::Services::SerialPort);
+-    object.setProperty(QStringLiteral("DialupNetworking"), BluezQt::Services::DialupNetworking);
+-    object.setProperty(QStringLiteral("ObexObjectPush"), BluezQt::Services::ObexObjectPush);
+-    object.setProperty(QStringLiteral("ObexFileTransfer"), BluezQt::Services::ObexFileTransfer);
+-    object.setProperty(QStringLiteral("Headset"), BluezQt::Services::Headset);
+-    object.setProperty(QStringLiteral("AudioSource"), BluezQt::Services::AudioSource);
+-    object.setProperty(QStringLiteral("AudioVideoRemoteControlTarget"), BluezQt::Services::AudioVideoRemoteControlTarget);
+-    object.setProperty(QStringLiteral("AdvancedAudioDistribution"), BluezQt::Services::AdvancedAudioDistribution);
+-    object.setProperty(QStringLiteral("AudioVideoRemoteControl"), BluezQt::Services::AudioVideoRemoteControl);
+-    object.setProperty(QStringLiteral("HeadsetAudioGateway"), BluezQt::Services::HeadsetAudioGateway);
+-    object.setProperty(QStringLiteral("Panu"), BluezQt::Services::Panu);
+-    object.setProperty(QStringLiteral("Nap"), BluezQt::Services::Nap);
+-    object.setProperty(QStringLiteral("Handsfree"), BluezQt::Services::Handsfree);
+-    object.setProperty(QStringLiteral("HandsfreeAudioGateway"), BluezQt::Services::HandsfreeAudioGateway);
+-    object.setProperty(QStringLiteral("HumanInterfaceDevice"), BluezQt::Services::HumanInterfaceDevice);
+-    object.setProperty(QStringLiteral("SimAccess"), BluezQt::Services::SimAccess);
+-    object.setProperty(QStringLiteral("PhonebookAccessServer"), BluezQt::Services::PhonebookAccessServer);
+-    object.setProperty(QStringLiteral("MessageAccessServer"), BluezQt::Services::MessageAccessServer);
+-    object.setProperty(QStringLiteral("PnpInformation"), BluezQt::Services::PnpInformation);
+-    return object;
++    return new DeclarativeServices;
+ }
+ 
+ void BluezQtExtensionPlugin::registerTypes(const char *uri)
+@@ -82,5 +108,7 @@ void BluezQtExtensionPlugin::registerTypes(const char *uri)
+     qmlRegisterUncreatableType<DeclarativeInput>(uri, 1, 0, "Input", QStringLiteral("Input cannot be created"));
+     qmlRegisterUncreatableType<DeclarativeMediaPlayer>(uri, 1, 0, "MediaPlayer", QStringLiteral("MediaPlayer cannot be created"));
+     qmlRegisterUncreatableType<PendingCall>(uri, 1, 0, "PendingCall", QStringLiteral("PendingCall cannot be created"));
+-    qmlRegisterSingletonType(uri, 1, 0, "Services", services_singleton);
++    qmlRegisterSingletonType<DeclarativeServices>(uri, 1, 0, "Services", services_singleton);
+ }
++
++#include "bluezqtextensionplugin.moc"

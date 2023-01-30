@@ -28,7 +28,7 @@ normal interfacesAdded() behaviour.
  5 files changed, 87 insertions(+), 7 deletions(-)
 
 diff --git a/src/device_p.cpp b/src/device_p.cpp
-index 54edc42..c67ea5a 100644
+index 54edc42395194b9217e95564210187501f3673e2..c67ea5a0660e7052514553e08b652c64e9a5d89c 100644
 --- a/src/device_p.cpp
 +++ b/src/device_p.cpp
 @@ -87,17 +87,17 @@ void DevicePrivate::interfacesAdded(const QString &path, const QVariantMapMap &i
@@ -53,7 +53,7 @@ index 54edc42..c67ea5a 100644
              m_mediaTransport->d->q = m_mediaTransport.toWeakRef();
              Q_EMIT q.data()->mediaTransportChanged(m_mediaTransport);
 diff --git a/src/manager_p.cpp b/src/manager_p.cpp
-index 1fd8125..9a0e08a 100644
+index 1fd8125ac824d299711b474a897a7051182d8a00..9a0e08a25f8b772363e5b3c5d1fe280b3102ec34 100644
 --- a/src/manager_p.cpp
 +++ b/src/manager_p.cpp
 @@ -168,8 +168,12 @@ void ManagerPrivate::getManagedObjectsFinished(QDBusPendingCallWatcher *watcher)
@@ -129,7 +129,7 @@ index 1fd8125..9a0e08a 100644
      if (!adapter) {
          return;
 diff --git a/src/manager_p.h b/src/manager_p.h
-index cc3276d..d7e96b6 100644
+index cc3276d6530de5699633c185eb62b1bb17871607..d7e96b6e59184743681490c3d424e17e7b1c545b 100644
 --- a/src/manager_p.h
 +++ b/src/manager_p.h
 @@ -99,6 +99,8 @@ Q_SIGNALS:
@@ -142,7 +142,7 @@ index cc3276d..d7e96b6 100644
  };
  
 diff --git a/src/obexmanager_p.cpp b/src/obexmanager_p.cpp
-index 2535b62..05608a8 100644
+index 2535b62d5fa4aa1f9b4ac5f871757ce4aba339d1..05608a85aca8c095d9726fc6e31ccc4b0cd8d13d 100644
 --- a/src/obexmanager_p.cpp
 +++ b/src/obexmanager_p.cpp
 @@ -116,8 +116,12 @@ void ObexManagerPrivate::load()
@@ -207,7 +207,7 @@ index 2535b62..05608a8 100644
      session->d->q = session.toWeakRef();
      m_sessions.insert(sessionPath, session);
 diff --git a/src/obexmanager_p.h b/src/obexmanager_p.h
-index 437d663..eed7191 100644
+index 437d663eace4503dcebfbebf22903b847f0d66fc..eed7191328fc4e96f942fc49e73e9f2ba51b4802 100644
 --- a/src/obexmanager_p.h
 +++ b/src/obexmanager_p.h
 @@ -79,6 +79,8 @@ Q_SIGNALS:

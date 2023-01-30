@@ -15,7 +15,7 @@ validity of q.data() in macros.h.
  1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/src/macros.h b/src/macros.h
-index 9b6c6f3..bdbe70d 100644
+index 9b6c6f36729d8b5a0c4686d1ec8182be1fd97885..bdbe70dab2fb02bdb03fda9573c4054e07c4433d 100644
 --- a/src/macros.h
 +++ b/src/macros.h
 @@ -27,21 +27,27 @@

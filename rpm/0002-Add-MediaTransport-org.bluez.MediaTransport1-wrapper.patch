@@ -31,7 +31,7 @@ Subject: [PATCH] Add MediaTransport - org.bluez.MediaTransport1 wrapper
  create mode 100644 src/mediatransportsocketinfo.h
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 88ecf38..0669029 100644
+index 88ecf38e19b39ffacede75a6aaad45943d2a20f7..0669029a834649fe10d8e740d6cc264873dffbd0 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -9,6 +9,9 @@ set(bluezqt_SRCS
@@ -62,7 +62,7 @@ index 88ecf38..0669029 100644
          Job
          InitManagerJob
 diff --git a/src/device.cpp b/src/device.cpp
-index def29a5..92567ca 100644
+index def29a5f5d205cf44b5bc4cf1d52d23c4dfd5c09..92567cac045d459796fa0688fcda22f1a9a511ad 100644
 --- a/src/device.cpp
 +++ b/src/device.cpp
 @@ -174,6 +174,11 @@ MediaPlayerPtr Device::mediaPlayer() const
@@ -78,7 +78,7 @@ index def29a5..92567ca 100644
  {
      return d->m_adapter;
 diff --git a/src/device.h b/src/device.h
-index 357ff33..bae7039 100644
+index 357ff334a523e42d686b996478839914a8ae66f8..bae7039d7f902a4060aa136944a293c98bef5be7 100644
 --- a/src/device.h
 +++ b/src/device.h
 @@ -64,6 +64,7 @@ class BLUEZQT_EXPORT Device : public QObject
@@ -108,7 +108,7 @@ index 357ff33..bae7039 100644
      explicit Device(const QString &path, const QVariantMap &properties, AdapterPtr adapter);
  
 diff --git a/src/device_p.cpp b/src/device_p.cpp
-index 77158a0..54edc42 100644
+index 77158a0559b6eb2e4d5fd472f3baea8639f31caf..54edc42395194b9217e95564210187501f3673e2 100644
 --- a/src/device_p.cpp
 +++ b/src/device_p.cpp
 @@ -27,6 +27,8 @@
@@ -144,7 +144,7 @@ index 77158a0..54edc42 100644
      }
  
 diff --git a/src/device_p.h b/src/device_p.h
-index c6eb3b6..684c96f 100644
+index c6eb3b6fe0b8f4597d457c485ce002b155571019..684c96fe2f972ef75107dc9eec14834264aab3c4 100644
 --- a/src/device_p.h
 +++ b/src/device_p.h
 @@ -76,6 +76,7 @@ public:
@@ -157,7 +157,7 @@ index c6eb3b6..684c96f 100644
  
 diff --git a/src/interfaces/org.bluez.MediaTransport1.xml b/src/interfaces/org.bluez.MediaTransport1.xml
 new file mode 100644
-index 0000000..d754e42
+index 0000000000000000000000000000000000000000..d754e42d69e9b90114e1cb68317826d2d1ae3272
 --- /dev/null
 +++ b/src/interfaces/org.bluez.MediaTransport1.xml
 @@ -0,0 +1,17 @@
@@ -180,7 +180,7 @@ index 0000000..d754e42
 +</node>
 diff --git a/src/mediatransport.cpp b/src/mediatransport.cpp
 new file mode 100644
-index 0000000..375a8a9
+index 0000000000000000000000000000000000000000..375a8a9d210cf631642008fea2f7fd311d17ef0d
 --- /dev/null
 +++ b/src/mediatransport.cpp
 @@ -0,0 +1,106 @@
@@ -292,7 +292,7 @@ index 0000000..375a8a9
 +} // namespace BluezQt
 diff --git a/src/mediatransport.h b/src/mediatransport.h
 new file mode 100644
-index 0000000..aa306ee
+index 0000000000000000000000000000000000000000..aa306ee25a3d034c90f274587a1c1315e384d353
 --- /dev/null
 +++ b/src/mediatransport.h
 @@ -0,0 +1,214 @@
@@ -512,7 +512,7 @@ index 0000000..aa306ee
 +#endif // BLUEZQT_MEDIATRANSPORT_H
 diff --git a/src/mediatransport_p.cpp b/src/mediatransport_p.cpp
 new file mode 100644
-index 0000000..a08b0f7
+index 0000000000000000000000000000000000000000..a08b0f7f3df5ee5db09d670f5811fc853104304b
 --- /dev/null
 +++ b/src/mediatransport_p.cpp
 @@ -0,0 +1,118 @@
@@ -636,7 +636,7 @@ index 0000000..a08b0f7
 +} // namespace BluezQt
 diff --git a/src/mediatransport_p.h b/src/mediatransport_p.h
 new file mode 100644
-index 0000000..51785e0
+index 0000000000000000000000000000000000000000..51785e02d17d242657466788d01afdc3b5504fb5
 --- /dev/null
 +++ b/src/mediatransport_p.h
 @@ -0,0 +1,64 @@
@@ -706,7 +706,7 @@ index 0000000..51785e0
 +#endif // BLUEZQT_MEDIATRANSPORT_P_H
 diff --git a/src/mediatransportsocketinfo.cpp b/src/mediatransportsocketinfo.cpp
 new file mode 100644
-index 0000000..60b3fb8
+index 0000000000000000000000000000000000000000..60b3fb8e84c2c0c20c822819ea5769d58053e7dc
 --- /dev/null
 +++ b/src/mediatransportsocketinfo.cpp
 @@ -0,0 +1,89 @@
@@ -801,7 +801,7 @@ index 0000000..60b3fb8
 +} // namespace BluezQt
 diff --git a/src/mediatransportsocketinfo.h b/src/mediatransportsocketinfo.h
 new file mode 100644
-index 0000000..ae4e968
+index 0000000000000000000000000000000000000000..ae4e968112733ac5051a2cc6e26f4a2d44047cb5
 --- /dev/null
 +++ b/src/mediatransportsocketinfo.h
 @@ -0,0 +1,105 @@
@@ -911,7 +911,7 @@ index 0000000..ae4e968
 +
 +#endif // BLUEZQT_MEDIATRANSPORTSOCKETINFO_H
 diff --git a/src/pendingcall.cpp b/src/pendingcall.cpp
-index 4f950f1..8b19c4e 100644
+index 4f950f16e98e6c44c21866684c152219f5382e0d..8b19c4e9b1bb91f6dc0854336ea8997a5d3ded7a 100644
 --- a/src/pendingcall.cpp
 +++ b/src/pendingcall.cpp
 @@ -24,12 +24,14 @@
@@ -967,7 +967,7 @@ index 4f950f1..8b19c4e 100644
  {
      if (error.isValid()) {
 diff --git a/src/pendingcall.h b/src/pendingcall.h
-index 2f42160..dbc53f2 100644
+index 2f42160dc6ba61b59a59f2ecffbba6fc9c588426..dbc53f24781326fb9e721ef5a3632ed32626446f 100644
 --- a/src/pendingcall.h
 +++ b/src/pendingcall.h
 @@ -180,7 +180,8 @@ private:
@@ -989,7 +989,7 @@ index 2f42160..dbc53f2 100644
      friend class ObexTransfer;
      friend class ObexSession;
 diff --git a/src/types.h b/src/types.h
-index 8afcf67..b7e8b28 100644
+index 8afcf679a5e883f71d2f028e2eb783252308ff78..b7e8b28492746755e8145503744c28bf93cc95c0 100644
 --- a/src/types.h
 +++ b/src/types.h
 @@ -34,6 +34,8 @@ class Device;
@@ -1010,7 +1010,7 @@ index 8afcf67..b7e8b28 100644
  typedef QSharedPointer<BluezQt::ObexSession> ObexSessionPtr;
  typedef QSharedPointer<BluezQt::ObexTransfer> ObexTransferPtr;
 diff --git a/src/utils.cpp b/src/utils.cpp
-index 9ca3d6d..0bf20fa 100644
+index 9ca3d6db65087d6954f8a94f5746922ca4727cfb..0bf20fa8056e537c080d0c9658fe428365bb75f8 100644
 --- a/src/utils.cpp
 +++ b/src/utils.cpp
 @@ -45,6 +45,7 @@ public:
@@ -1042,7 +1042,7 @@ index 9ca3d6d..0bf20fa 100644
  {
      return globalData->orgBluezAgentManager1;
 diff --git a/src/utils.h b/src/utils.h
-index 08cb6b9..6177a53 100644
+index 08cb6b9c66a4913e08f7c82901f8e8017f8bd48d..6177a53490f7fb141b8ed99508ebe6ea2f276d17 100644
 --- a/src/utils.h
 +++ b/src/utils.h
 @@ -42,6 +42,7 @@ QString orgBluezAdapter1();

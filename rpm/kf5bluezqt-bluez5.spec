@@ -34,6 +34,8 @@ Patch9:  0009-Add-filtering-options-to-DeclarativeDevicesModel.-Co.patch
 Patch10: 0010-Build-with-Qt-5.6.patch
 Patch11: 0011-Add-support-for-KeyboardDisplay-type-agents.patch
 Patch12: 0012-Force-light-mode-in-Doxygen.patch
+Patch13: 0013-Fix-qmlplugindump-crash.patch
+Patch14: 0014-Add-plugins.qmltypes.patch
 
 %description
 This package contains the KF5BluezQt library.
