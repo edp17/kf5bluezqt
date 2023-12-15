@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Wed, 13 Dec 2023 11:54:02 +0200
+Subject: [PATCH] Add some missing includes
+
+---
+ src/gattcharacteristic.h   | 1 +
+ src/gattdescriptorremote.h | 2 ++
+ src/gattserviceremote.h    | 2 ++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/src/gattcharacteristic.h b/src/gattcharacteristic.h
+index 8022701..60f2fc2 100644
+--- a/src/gattcharacteristic.h
++++ b/src/gattcharacteristic.h
+@@ -12,6 +12,7 @@
+ #include "bluezqt_export.h"
+ 
+ #include <QDBusObjectPath>
++#include <functional>
+ 
+ namespace BluezQt
+ {
+diff --git a/src/gattdescriptorremote.h b/src/gattdescriptorremote.h
+index 4d87d9f..119b990 100644
+--- a/src/gattdescriptorremote.h
++++ b/src/gattdescriptorremote.h
+@@ -15,6 +15,8 @@
+ #include "types.h"
+ #include "bluezqt_export.h"
+ 
++#include <memory>
++
+ namespace BluezQt
+ {
+ 
+diff --git a/src/gattserviceremote.h b/src/gattserviceremote.h
+index 42285c0..242ff64 100644
+--- a/src/gattserviceremote.h
++++ b/src/gattserviceremote.h
+@@ -16,6 +16,8 @@
+ #include "types.h"
+ #include "bluezqt_export.h"
+ 
++#include <memory>
++
+ namespace BluezQt
+ {
+ 

@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Thu, 14 Dec 2023 09:16:21 +0200
+Subject: [PATCH] Add back QtQml include
+
+Upstream replaced with plain QQmlEngine but that makes the build fail
+with our Qt.
+---
+ src/imports/bluezqtextensionplugin.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/imports/bluezqtextensionplugin.cpp b/src/imports/bluezqtextensionplugin.cpp
+index 18ebcad..af5bccb 100644
+--- a/src/imports/bluezqtextensionplugin.cpp
++++ b/src/imports/bluezqtextensionplugin.cpp
+@@ -20,6 +20,7 @@
+ #include "services.h"
+ 
+ #include <QQmlEngine>
++#include <QtQml>
+ 
+ static QObject *manager_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
+ {

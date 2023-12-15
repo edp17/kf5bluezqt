@@ -4,32 +4,33 @@ Date: Tue, 8 Feb 2022 14:39:18 +0200
 Subject: [PATCH] Build with Qt 5.6
 
 ---
- CMakeLists.txt                          | 2 +-
- src/imports/declarativedevicesmodel.cpp | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ CMakeLists.txt                     | 2 +-
+ tools/bluezapi2qt/CppGenerator.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed9028e2310d190cc6f833349054876b2b605791..3c782f08461e9fec69af4f471cb429fa441eb1cb 100644
+index 7109159..2bb976e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -34,7 +34,7 @@ ecm_setup_version(PROJECT
+@@ -39,7 +39,7 @@ ecm_setup_version(PROJECT
  )
  
  # Dependencies
--set(REQUIRED_QT_VERSION 5.8.0)
+-set(REQUIRED_QT_VERSION 5.15.2)
 +set(REQUIRED_QT_VERSION 5.6.0)
  
- # Required Qt5 components to build this framework
- find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Network)
-diff --git a/src/imports/declarativedevicesmodel.cpp b/src/imports/declarativedevicesmodel.cpp
-index dfcd5f885ae58bef21218b4c57745e80d46b3e06..a7a2732f08473aa2c46bd3207562cfc921f543ad 100644
---- a/src/imports/declarativedevicesmodel.cpp
-+++ b/src/imports/declarativedevicesmodel.cpp
-@@ -110,7 +110,6 @@ QVariant DeclarativeDevicesModel::data(const QModelIndex &index, int role) const
-             return QVariant::fromValue(device->mediaPlayer());
-         }
-         // fallthrough
--        Q_FALLTHROUGH();
-     default:
-         return QSortFilterProxyModel::data(index, role);
+ # Required Qt components to build this framework
+ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Network)
+diff --git a/tools/bluezapi2qt/CppGenerator.cpp b/tools/bluezapi2qt/CppGenerator.cpp
+index a6ddbc3..38781b7 100644
+--- a/tools/bluezapi2qt/CppGenerator.cpp
++++ b/tools/bluezapi2qt/CppGenerator.cpp
+@@ -191,7 +191,7 @@ QString CppGenerator::interfaceToClassName(const QString &interface)
+ {
+     const int index = interface.lastIndexOf(QRegularExpression(QStringLiteral("\\.[A-Z]\\w+"))) + 1;
+     auto className = interface.mid(index);
+-    while (className.back() > QLatin1Char('0') && className.back() <= QLatin1Char('9')) {
++    while (className.at(className.size()-1) > QLatin1Char('0') && className.at(className.size()-1) <= QLatin1Char('9')) {
+         className.remove(className.size() - 1, 1);
      }
+ 

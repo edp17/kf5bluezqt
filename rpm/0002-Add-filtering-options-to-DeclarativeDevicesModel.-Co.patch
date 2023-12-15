@@ -10,10 +10,10 @@ Subject: [PATCH] Add filtering options to DeclarativeDevicesModel. Contributes
  2 files changed, 78 insertions(+)
 
 diff --git a/src/imports/declarativedevicesmodel.cpp b/src/imports/declarativedevicesmodel.cpp
-index eff2e2e3fb2b95f30c064e55bd717670ca1420c9..dfcd5f885ae58bef21218b4c57745e80d46b3e06 100644
+index b52130c..bb388b4 100644
 --- a/src/imports/declarativedevicesmodel.cpp
 +++ b/src/imports/declarativedevicesmodel.cpp
-@@ -30,6 +30,7 @@ DeclarativeDevicesModel::DeclarativeDevicesModel(QObject *parent)
+@@ -16,6 +16,7 @@ DeclarativeDevicesModel::DeclarativeDevicesModel(QObject *parent)
      : QSortFilterProxyModel(parent)
      , m_manager(nullptr)
      , m_model(nullptr)
@@ -21,7 +21,7 @@ index eff2e2e3fb2b95f30c064e55bd717670ca1420c9..dfcd5f885ae58bef21218b4c57745e80
  {
  }
  
-@@ -45,6 +46,38 @@ void DeclarativeDevicesModel::setManager(DeclarativeManager *manager)
+@@ -31,6 +32,38 @@ void DeclarativeDevicesModel::setManager(DeclarativeManager *manager)
      setSourceModel(m_model);
  }
  
@@ -60,11 +60,10 @@ index eff2e2e3fb2b95f30c064e55bd717670ca1420c9..dfcd5f885ae58bef21218b4c57745e80
  QHash<int, QByteArray> DeclarativeDevicesModel::roleNames() const
  {
      QHash<int, QByteArray> roles = QSortFilterProxyModel::roleNames();
-@@ -82,3 +115,22 @@ QVariant DeclarativeDevicesModel::data(const QModelIndex &index, int role) const
-         return QSortFilterProxyModel::data(index, role);
-     }
+@@ -74,4 +107,23 @@ QVariant DeclarativeDevicesModel::data(const QModelIndex &index, int role) const
+     return QSortFilterProxyModel::data(index, role);
  }
-+
+ 
 +bool DeclarativeDevicesModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 +{
 +    if (!m_model) {
@@ -83,21 +82,23 @@ index eff2e2e3fb2b95f30c064e55bd717670ca1420c9..dfcd5f885ae58bef21218b4c57745e80
 +
 +    return !m_hiddenAddresses.contains(dev->address());
 +}
++
+ #include "moc_declarativedevicesmodel.cpp"
 diff --git a/src/imports/declarativedevicesmodel.h b/src/imports/declarativedevicesmodel.h
-index 8d034b430611a2df4d9367db9fef1b6e45b0042d..5f0199db5d28524cdca4c1165cc60c225e449316 100644
+index a8e315b..0be4d66 100644
 --- a/src/imports/declarativedevicesmodel.h
 +++ b/src/imports/declarativedevicesmodel.h
-@@ -33,6 +33,8 @@ class DeclarativeDevicesModel : public QSortFilterProxyModel
+@@ -18,6 +18,8 @@ class DeclarativeDevicesModel : public QSortFilterProxyModel
  {
      Q_OBJECT
-     Q_PROPERTY(DeclarativeManager* manager READ manager WRITE setManager)
+     Q_PROPERTY(DeclarativeManager *manager READ manager WRITE setManager)
 +    Q_PROPERTY(DeclarativeDevicesModel::DeclarativeFilters filters READ filters WRITE setFilters NOTIFY filtersChanged)
 +    Q_PROPERTY(QStringList hiddenAddresses READ hiddenAddresses WRITE setHiddenAddresses NOTIFY hiddenAddressesChanged)
  
  public:
      enum DeclarativeDeviceRoles {
-@@ -41,18 +43,42 @@ public:
-         MediaPlayerRole = BluezQt::DevicesModel::LastRole + 3
+@@ -27,17 +29,41 @@ public:
+         BatteryRole = BluezQt::DevicesModel::LastRole + 4,
      };
  
 +    enum DeclarativeFilter {
@@ -138,4 +139,3 @@ index 8d034b430611a2df4d9367db9fef1b6e45b0042d..5f0199db5d28524cdca4c1165cc60c22
 +Q_DECLARE_OPERATORS_FOR_FLAGS(DeclarativeDevicesModel::DeclarativeFilters)
 +
  #endif // DECLARATIVEMANAGER_H
- 

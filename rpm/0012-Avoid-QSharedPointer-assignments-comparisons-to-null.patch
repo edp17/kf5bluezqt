@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Wed, 13 Dec 2023 11:54:19 +0200
+Subject: [PATCH] Avoid QSharedPointer assignments/comparisons to nullptr
+
+These require Qt 5.8.
+---
+ src/device_p.cpp                   | 4 ++--
+ src/gattcharacteristicremote_p.cpp | 2 +-
+ src/gattserviceremote_p.cpp        | 2 +-
+ src/manager.cpp                    | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/device_p.cpp b/src/device_p.cpp
+index 52ca525..1bdfa5a 100644
+--- a/src/device_p.cpp
++++ b/src/device_p.cpp
+@@ -210,14 +210,14 @@ void DevicePrivate::removeGattService(const QString &gattServicePath)
+         return;
+     }
+ 
+-    GattServiceRemotePtr gattService = nullptr;
++    GattServiceRemotePtr gattService;
+     for (int i=0; i < device->gattServices().size(); ++i) {
+         if (device->gattServices().at(i)->ubi() == gattServicePath) {
+             gattService = device->gattServices().at(i);
+         }
+     }
+ 
+-    if (gattService == nullptr) {
++    if (gattService.isNull()) {
+         return;
+     }
+ 
+diff --git a/src/gattcharacteristicremote_p.cpp b/src/gattcharacteristicremote_p.cpp
+index 186f522..bb2046f 100644
+--- a/src/gattcharacteristicremote_p.cpp
++++ b/src/gattcharacteristicremote_p.cpp
+@@ -120,7 +120,7 @@ void GattCharacteristicRemotePrivate::removeGattDescriptor(const QString &gattDe
+         return;
+     }
+ 
+-    GattDescriptorRemotePtr gattDescriptor = nullptr;
++    GattDescriptorRemotePtr gattDescriptor;
+     for (int i=0; i < characteristic->descriptors().size(); ++i) {
+         if (characteristic->descriptors().at(i)->ubi() == gattDescriptorPath) {
+             gattDescriptor = characteristic->descriptors().at(i);
+diff --git a/src/gattserviceremote_p.cpp b/src/gattserviceremote_p.cpp
+index 9a7aec7..3d6d155 100644
+--- a/src/gattserviceremote_p.cpp
++++ b/src/gattserviceremote_p.cpp
+@@ -128,7 +128,7 @@ void GattServiceRemotePrivate::removeGattCharacteristic(const QString &gattChara
+         return;
+     }
+ 
+-    GattCharacteristicRemotePtr gattCharacteristic = nullptr;
++    GattCharacteristicRemotePtr gattCharacteristic;
+     for (int i=0; i < service->characteristics().size(); ++i) {
+         if (service->characteristics().at(i)->ubi() == gattCharacteristicPath) {
+             gattCharacteristic = service->characteristics().at(i);
+diff --git a/src/manager.cpp b/src/manager.cpp
+index 199428d..9660d11 100644
+--- a/src/manager.cpp
++++ b/src/manager.cpp
+@@ -247,7 +247,7 @@ PendingCall *Manager::unregisterProfile(Profile *profile)
+ #if BLUEZQT_BUILD_DEPRECATED_SINCE(5, 57)
+ MediaPtr Manager::media() const
+ {
+-    return usableAdapter() ? usableAdapter()->media() : nullptr;
++    return usableAdapter() ? usableAdapter()->media() : QSharedPointer<BluezQt::Media>();
+ }
+ #endif
+ 
