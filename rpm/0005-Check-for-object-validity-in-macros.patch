@@ -15,16 +15,16 @@ validity of q.data() in macros.h.
  1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/src/macros.h b/src/macros.h
-index 9b6c6f36729d8b5a0c4686d1ec8182be1fd97885..bdbe70dab2fb02bdb03fda9573c4054e07c4433d 100644
+index 408646f..4432056 100644
 --- a/src/macros.h
 +++ b/src/macros.h
-@@ -27,21 +27,27 @@
+@@ -15,21 +15,27 @@
  #define PROPERTY_CHANGED(var, type_cast, signal) \
      if (var != value.type_cast()) { \
          var = value.type_cast(); \
--        Q_EMIT q.data()->signal(var); \
-+        if (q.data()) { \
-+            Q_EMIT q.data()->signal(var); \
+-        Q_EMIT q.lock()->signal(var); \
++        if (q.lock()) { \
++            Q_EMIT q.lock()->signal(var); \
 +        } \
      }
  
@@ -32,9 +32,9 @@ index 9b6c6f36729d8b5a0c4686d1ec8182be1fd97885..bdbe70dab2fb02bdb03fda9573c4054e
      const auto &val = value; \
      if (var != val) { \
          var = val; \
--        Q_EMIT q.data()->signal(var); \
-+        if (q.data()) { \
-+            Q_EMIT q.data()->signal(var); \
+-        Q_EMIT q.lock()->signal(var); \
++        if (q.lock()) { \
++            Q_EMIT q.lock()->signal(var); \
 +        } \
      }
  
@@ -42,9 +42,9 @@ index 9b6c6f36729d8b5a0c4686d1ec8182be1fd97885..bdbe70dab2fb02bdb03fda9573c4054e
  #define PROPERTY_INVALIDATED(var, empty, signal) \
      if (var != empty) { \
          var = empty; \
--        Q_EMIT q.data()->signal(var); \
-+        if (q.data()) { \
-+            Q_EMIT q.data()->signal(var); \
+-        Q_EMIT q.lock()->signal(var); \
++        if (q.lock()) { \
++            Q_EMIT q.lock()->signal(var); \
 +        } \
      }
  

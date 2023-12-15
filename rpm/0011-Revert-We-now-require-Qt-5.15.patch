@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Wed, 13 Dec 2023 13:37:02 +0200
+Subject: [PATCH] Revert "We now require Qt 5.15"
+
+This reverts commit ce88ae1d5aa40d9da5d2fb2f12b06971926fac7c.
+---
+ tools/bluezapi2qt/Methods.cpp    | 12 ++++++++++++
+ tools/bluezapi2qt/Properties.cpp |  4 ++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/tools/bluezapi2qt/Methods.cpp b/tools/bluezapi2qt/Methods.cpp
+index 8d9dcc1..044e502 100644
+--- a/tools/bluezapi2qt/Methods.cpp
++++ b/tools/bluezapi2qt/Methods.cpp
+@@ -37,10 +37,22 @@ void Methods::parse(const QString &line)
+     if (match.hasMatch()) {
+         m_methods.emplace_back(Method());
+         m_currentMethod = &m_methods.back();
++#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
++        m_currentMethod->m_outParameterStrings = match.captured(1).toLower().split(QStringLiteral(", "), QString::SkipEmptyParts);
++#else
+         m_currentMethod->m_outParameterStrings = match.captured(1).toLower().split(QStringLiteral(", "), Qt::SkipEmptyParts);
++#endif
+         m_currentMethod->m_name = match.captured(2);
++#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
++        m_currentMethod->m_inParameterStrings = match.captured(3).split(QStringLiteral(", "), QString::SkipEmptyParts);
++#else
+         m_currentMethod->m_inParameterStrings = match.captured(3).split(QStringLiteral(", "), Qt::SkipEmptyParts);
++#endif
++#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
++        m_currentMethod->m_stringTags = match.captured(4).toLower().split(QStringLiteral(", "), QString::SkipEmptyParts);
++#else
+         m_currentMethod->m_stringTags = match.captured(4).toLower().split(QStringLiteral(", "), Qt::SkipEmptyParts);
++#endif
+         m_currentMethod->m_limitation = match.captured(5).toLower();
+     } else if (m_currentMethod) {
+         // Skip first empty line
+diff --git a/tools/bluezapi2qt/Properties.cpp b/tools/bluezapi2qt/Properties.cpp
+index 8fe05a0..ebedc38 100644
+--- a/tools/bluezapi2qt/Properties.cpp
++++ b/tools/bluezapi2qt/Properties.cpp
+@@ -34,7 +34,11 @@ void Properties::parse(const QString &line)
+         m_currentProperty = &m_properties.back();
+         m_currentProperty->m_type = match.captured(1).toLower();
+         m_currentProperty->m_name = match.captured(2);
++#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
++        m_currentProperty->m_stringTags = match.captured(3).toLower().split(QStringLiteral(", "), QString::SkipEmptyParts);
++#else
+         m_currentProperty->m_stringTags = match.captured(3).toLower().split(QStringLiteral(", "), Qt::SkipEmptyParts);
++#endif
+         m_currentProperty->m_limitation = match.captured(4).toLower();
+     } else if (m_currentProperty) {
+         // Skip first empty line

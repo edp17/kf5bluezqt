@@ -4,19 +4,20 @@ Date: Fri, 27 Jan 2023 10:56:03 +0100
 Subject: [PATCH] Add plugins.qmltypes
 
 ---
- src/imports/CMakeLists.txt   |   5 +
- src/imports/plugins.qmltypes | 586 +++++++++++++++++++++++++++++++++++
- 2 files changed, 591 insertions(+)
+ src/imports/CMakeLists.txt   |   6 +
+ src/imports/plugins.qmltypes | 635 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 641 insertions(+)
  create mode 100644 src/imports/plugins.qmltypes
 
 diff --git a/src/imports/CMakeLists.txt b/src/imports/CMakeLists.txt
-index 59668a5ad94dd8026625bb95ffdf236cdc84077d..f7da03b192a6ed7b48eca01b192089564e3fd5de 100644
+index 85f9862..79b83c4 100644
 --- a/src/imports/CMakeLists.txt
 +++ b/src/imports/CMakeLists.txt
-@@ -23,3 +23,8 @@ target_link_libraries(bluezqtextensionplugin
- install(TARGETS bluezqtextensionplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/bluezqt)
- install(FILES DevicesModel.qml DESTINATION ${QML_INSTALL_DIR}/org/kde/bluezqt)
- install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/bluezqt)
+@@ -21,3 +21,9 @@ target_link_libraries(bluezqtextensionplugin
+ )
+ 
+ ecm_finalize_qml_module(bluezqtextensionplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++
 +install(FILES plugins.qmltypes DESTINATION ${QML_INSTALL_DIR}/org/kde/bluezqt)
 +
 +add_custom_target(qmltypes
@@ -24,10 +25,10 @@ index 59668a5ad94dd8026625bb95ffdf236cdc84077d..f7da03b192a6ed7b48eca01b19208956
 +  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 diff --git a/src/imports/plugins.qmltypes b/src/imports/plugins.qmltypes
 new file mode 100644
-index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42c6122d24
+index 0000000..8fb94f1
 --- /dev/null
 +++ b/src/imports/plugins.qmltypes
-@@ -0,0 +1,586 @@
+@@ -0,0 +1,635 @@
 +import QtQuick.tooling 1.2
 +
 +// This file describes the plugin-supplied types contained in the library.
@@ -49,6 +50,7 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Property { name: "usableAdapter"; type: "AdapterPtr"; isReadonly: true }
 +        Property { name: "adapters"; type: "QList<AdapterPtr>"; isReadonly: true }
 +        Property { name: "devices"; type: "QList<DevicePtr>"; isReadonly: true }
++        Property { name: "rfkill"; type: "Rfkill"; isReadonly: true; isPointer: true }
 +        Signal {
 +            name: "operationalChanged"
 +            Parameter { name: "operational"; type: "bool" }
@@ -124,6 +126,8 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +                "AuthenticationRejected": 17,
 +                "AuthenticationTimeout": 18,
 +                "ConnectionAttemptFailed": 19,
++                "InvalidLength": 20,
++                "NotPermitted": 21,
 +                "DBusError": 98,
 +                "InternalError": 99,
 +                "UnknownError": 100
@@ -138,6 +142,27 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Signal {
 +            name: "finished"
 +            Parameter { name: "call"; type: "PendingCall"; isPointer: true }
++        }
++    }
++    Component {
++        name: "BluezQt::Rfkill"
++        prototype: "QObject"
++        exports: ["org.kde.bluezqt/Rfkill 1.0"]
++        isCreatable: false
++        exportMetaObjectRevisions: [0]
++        Enum {
++            name: "State"
++            values: {
++                "Unblocked": 0,
++                "SoftBlocked": 1,
++                "HardBlocked": 2,
++                "Unknown": 3
++            }
++        }
++        Property { name: "state"; type: "State"; isReadonly: true }
++        Signal {
++            name: "stateChanged"
++            Parameter { name: "state"; type: "State" }
 +        }
 +    }
 +    Component {
@@ -247,6 +272,18 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        }
 +    }
 +    Component {
++        name: "DeclarativeBattery"
++        prototype: "QObject"
++        exports: ["org.kde.bluezqt/Battery 1.0"]
++        isCreatable: false
++        exportMetaObjectRevisions: [0]
++        Property { name: "percentage"; type: "int"; isReadonly: true }
++        Signal {
++            name: "percentageChanged"
++            Parameter { name: "percentage"; type: "int" }
++        }
++    }
++    Component {
 +        name: "DeclarativeDevice"
 +        prototype: "QObject"
 +        exports: ["org.kde.bluezqt/Device 1.0"]
@@ -269,6 +306,7 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Property { name: "connected"; type: "bool"; isReadonly: true }
 +        Property { name: "uuids"; type: "QStringList"; isReadonly: true }
 +        Property { name: "modalias"; type: "string"; isReadonly: true }
++        Property { name: "battery"; type: "DeclarativeBattery"; isReadonly: true; isPointer: true }
 +        Property { name: "input"; type: "DeclarativeInput"; isReadonly: true; isPointer: true }
 +        Property {
 +            name: "mediaPlayer"
@@ -344,6 +382,10 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Signal {
 +            name: "modaliasChanged"
 +            Parameter { name: "modalias"; type: "string" }
++        }
++        Signal {
++            name: "batteryChanged"
++            Parameter { name: "battery"; type: "DeclarativeBattery"; isPointer: true }
 +        }
 +        Signal {
 +            name: "inputChanged"
@@ -548,6 +590,7 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Property { name: "ObexFileTransfer"; type: "string"; isReadonly: true }
 +        Property { name: "Headset"; type: "string"; isReadonly: true }
 +        Property { name: "AudioSource"; type: "string"; isReadonly: true }
++        Property { name: "AudioSink"; type: "string"; isReadonly: true }
 +        Property { name: "AudioVideoRemoteControlTarget"; type: "string"; isReadonly: true }
 +        Property { name: "AdvancedAudioDistribution"; type: "string"; isReadonly: true }
 +        Property { name: "AudioVideoRemoteControl"; type: "string"; isReadonly: true }
@@ -561,6 +604,13 @@ index 0000000000000000000000000000000000000000..fdc8d1fd3b9454c9b55ce12ef1d60c42
 +        Property { name: "PhonebookAccessServer"; type: "string"; isReadonly: true }
 +        Property { name: "MessageAccessServer"; type: "string"; isReadonly: true }
 +        Property { name: "PnpInformation"; type: "string"; isReadonly: true }
++        Property { name: "GenericAccess"; type: "string"; isReadonly: true }
++        Property { name: "GenericAcces"; type: "string"; isReadonly: true }
++        Property { name: "GenericAttribute"; type: "string"; isReadonly: true }
++        Property { name: "ImmediateAlert"; type: "string"; isReadonly: true }
++        Property { name: "LinkLoss"; type: "string"; isReadonly: true }
++        Property { name: "TxPower"; type: "string"; isReadonly: true }
++        Property { name: "HeartRate"; type: "string"; isReadonly: true }
 +    }
 +    Component {
 +        name: "QAbstractProxyModel"

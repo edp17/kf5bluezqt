@@ -11,10 +11,10 @@ Signed-off-by: Ville Nummela <ville.nummela@jolla.com>
  create mode 100644 src/Doxygen.config.in
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 0669029a834649fe10d8e740d6cc264873dffbd0..d7c0ecb6f22cdee68a83df0dc10828edde0ba505 100644
+index 4d3844d..3b3d15d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -145,6 +145,7 @@ if(BUILD_QCH)
+@@ -217,6 +217,7 @@ if(BUILD_QCH)
          TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
          QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
          COMPONENT Devel
@@ -24,7 +24,7 @@ index 0669029a834649fe10d8e740d6cc264873dffbd0..d7c0ecb6f22cdee68a83df0dc10828ed
  
 diff --git a/src/Doxygen.config.in b/src/Doxygen.config.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..1e5d3b55b6d0a68d67d71d6d58419eb3b28c7a99
+index 0000000..e3dae26
 --- /dev/null
 +++ b/src/Doxygen.config.in
 @@ -0,0 +1,250 @@
@@ -168,7 +168,7 @@ index 0000000000000000000000000000000000000000..1e5d3b55b6d0a68d67d71d6d58419eb3
 +QHP_VIRTUAL_FOLDER     = @ECM_QCH_DOXYGEN_VIRTUALFOLDER@
 +QHG_LOCATION           = @ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE@
 +#---------------------------------------------------------------------------
-+# Configuration options related to the preprocessor   
++# Configuration options related to the preprocessor
 +#---------------------------------------------------------------------------
 +ENABLE_PREPROCESSING   = YES
 +MACRO_EXPANSION        = YES
@@ -179,13 +179,13 @@ index 0000000000000000000000000000000000000000..1e5d3b55b6d0a68d67d71d6d58419eb3
 +EXPAND_AS_DEFINED      = 
 +SKIP_FUNCTION_MACROS   = YES
 +#---------------------------------------------------------------------------
-+# Configuration::additions related to external references   
++# Configuration::additions related to external references
 +#---------------------------------------------------------------------------
 +ALLEXTERNALS           = NO
 +EXTERNAL_GROUPS        = YES
 +TAGFILES               = @ECM_QCH_DOXYGEN_TAGFILES@
 +#---------------------------------------------------------------------------
-+# Configuration options related to the dot tool   
++# Configuration options related to the dot tool
 +#---------------------------------------------------------------------------
 +CLASS_DIAGRAMS         = NO
 +HIDE_UNDOC_RELATIONS   = YES
@@ -203,7 +203,7 @@ index 0000000000000000000000000000000000000000..1e5d3b55b6d0a68d67d71d6d58419eb3
 +DIRECTORY_GRAPH        = NO
 +GENERATE_LEGEND        = NO
 +#---------------------------------------------------------------------------
-+# Configuration::additions related to the search engine   
++# Configuration::additions related to the search engine
 +#---------------------------------------------------------------------------
 +SEARCHENGINE           = NO
 +

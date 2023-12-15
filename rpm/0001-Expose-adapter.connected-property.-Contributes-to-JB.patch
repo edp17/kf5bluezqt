@@ -18,10 +18,10 @@ Contributes to JB#38153
  6 files changed, 53 insertions(+)
 
 diff --git a/src/adapter.cpp b/src/adapter.cpp
-index cc38928765417e79fdf78f5860c0120fe2b23b51..654b86d31f8f17461f39efabc354c081e61f3c27 100644
+index 28d1cd4..df84881 100644
 --- a/src/adapter.cpp
 +++ b/src/adapter.cpp
-@@ -151,6 +151,11 @@ QList<DevicePtr> Adapter::devices() const
+@@ -144,6 +144,11 @@ QList<DevicePtr> Adapter::devices() const
      return d->m_devices;
  }
  
@@ -32,20 +32,20 @@ index cc38928765417e79fdf78f5860c0120fe2b23b51..654b86d31f8f17461f39efabc354c081
 +
  DevicePtr Adapter::deviceForAddress(const QString &address) const
  {
-     Q_FOREACH (DevicePtr device, d->m_devices) {
+     for (DevicePtr device : std::as_const(d->m_devices)) {
 diff --git a/src/adapter.h b/src/adapter.h
-index 1a0026663c4fd6df827de0105cd21080a25f49d0..aa4c0f6c56695b71c77969380898f7c9de1f4d92 100644
+index 5253812..d16abb6 100644
 --- a/src/adapter.h
 +++ b/src/adapter.h
-@@ -61,6 +61,7 @@ class BLUEZQT_EXPORT Adapter : public QObject
-     Q_PROPERTY(QStringList uuids READ uuids NOTIFY uuidsChanged)
-     Q_PROPERTY(QString modalias READ modalias NOTIFY modaliasChanged)
+@@ -49,6 +49,7 @@ class BLUEZQT_EXPORT Adapter : public QObject
+     Q_PROPERTY(LEAdvertisingManagerPtr leAdvertisingManager READ leAdvertisingManager NOTIFY leAdvertisingManagerChanged)
+     Q_PROPERTY(MediaPtr media READ media NOTIFY mediaChanged)
      Q_PROPERTY(QList<DevicePtr> devices READ devices)
 +    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
  
  public:
      /**
-@@ -237,6 +238,13 @@ public:
+@@ -246,6 +247,13 @@ public:
       */
      QList<DevicePtr> devices() const;
  
@@ -59,7 +59,7 @@ index 1a0026663c4fd6df827de0105cd21080a25f49d0..aa4c0f6c56695b71c77969380898f7c9
      /**
       * Returns a device for specified address.
       *
-@@ -357,6 +365,11 @@ Q_SIGNALS:
+@@ -406,6 +414,11 @@ Q_SIGNALS:
       */
      void deviceChanged(DevicePtr device);
  
@@ -69,13 +69,13 @@ index 1a0026663c4fd6df827de0105cd21080a25f49d0..aa4c0f6c56695b71c77969380898f7c9
 +    void connectedChanged(bool connected);
 +
  private:
-     explicit Adapter(const QString &path, const QVariantMap &properties);
+     BLUEZQT_NO_EXPORT explicit Adapter(const QString &path, const QVariantMap &properties);
  
 diff --git a/src/adapter_p.cpp b/src/adapter_p.cpp
-index eb5fa9f33590bf8342bcca6db55fa4d8475670a8..1ab0e11fc54b4df2a937097708b2c2d28b2f682c 100644
+index ad365db..1f1ac09 100644
 --- a/src/adapter_p.cpp
 +++ b/src/adapter_p.cpp
-@@ -37,6 +37,7 @@ AdapterPrivate::AdapterPrivate(const QString &path, const QVariantMap &propertie
+@@ -27,6 +27,7 @@ AdapterPrivate::AdapterPrivate(const QString &path, const QVariantMap &propertie
      , m_discoverableTimeout(0)
      , m_pairable(false)
      , m_pairableTimeout(0)
@@ -83,26 +83,26 @@ index eb5fa9f33590bf8342bcca6db55fa4d8475670a8..1ab0e11fc54b4df2a937097708b2c2d2
  {
      m_bluezAdapter = new BluezAdapter(Strings::orgBluez(), path, DBusConnection::orgBluez(), this);
  
-@@ -68,6 +69,8 @@ void AdapterPrivate::addDevice(const DevicePtr &device)
+@@ -103,6 +104,8 @@ void AdapterPrivate::addDevice(const DevicePtr &device)
      m_devices.append(device);
-     Q_EMIT q.data()->deviceAdded(device);
+     Q_EMIT q.lock()->deviceAdded(device);
  
 +    deviceConnectedChanged();
 +    connect(device.data(), &Device::connectedChanged, this, &AdapterPrivate::deviceConnectedChanged);
-     connect(device.data(), &Device::deviceChanged, q.data(), &Adapter::deviceChanged);
+     connect(device.data(), &Device::deviceChanged, q.lock().data(), &Adapter::deviceChanged);
  }
  
-@@ -77,6 +80,8 @@ void AdapterPrivate::removeDevice(const DevicePtr &device)
+@@ -112,6 +115,8 @@ void AdapterPrivate::removeDevice(const DevicePtr &device)
      Q_EMIT device->deviceRemoved(device);
-     Q_EMIT q.data()->deviceRemoved(device);
+     Q_EMIT q.lock()->deviceRemoved(device);
  
 +    deviceConnectedChanged();
 +    disconnect(device.data(), &Device::connectedChanged, this, &AdapterPrivate::deviceConnectedChanged);
-     disconnect(device.data(), &Device::deviceChanged, q.data(), &Adapter::deviceChanged);
+     disconnect(device.data(), &Device::deviceChanged, q.lock().data(), &Adapter::deviceChanged);
  }
  
-@@ -130,4 +135,20 @@ void AdapterPrivate::propertiesChanged(const QString &interface, const QVariantM
-     Q_EMIT q.data()->adapterChanged(q.toStrongRef());
+@@ -165,6 +170,22 @@ void AdapterPrivate::propertiesChanged(const QString &interface, const QVariantM
+     Q_EMIT q.lock()->adapterChanged(q.toStrongRef());
  }
  
 +void AdapterPrivate::deviceConnectedChanged()
@@ -122,11 +122,13 @@ index eb5fa9f33590bf8342bcca6db55fa4d8475670a8..1ab0e11fc54b4df2a937097708b2c2d2
 +}
 +
  } // namespace BluezQt
+ 
+ #include "moc_adapter_p.cpp"
 diff --git a/src/adapter_p.h b/src/adapter_p.h
-index 734364d60905515c006a7cd632bdc0b8531077e9..88760fc3653eaf3621f6d8ceb3bd946c125edfef 100644
+index 65b4318..09f7856 100644
 --- a/src/adapter_p.h
 +++ b/src/adapter_p.h
-@@ -51,6 +51,8 @@ public:
+@@ -40,6 +40,8 @@ public:
      QDBusPendingReply<> setDBusProperty(const QString &name, const QVariant &value);
      void propertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
  
@@ -135,19 +137,19 @@ index 734364d60905515c006a7cd632bdc0b8531077e9..88760fc3653eaf3621f6d8ceb3bd946c
      QWeakPointer<Adapter> q;
      BluezAdapter *m_bluezAdapter;
      DBusProperties *m_dbusProperties;
-@@ -67,6 +69,7 @@ public:
+@@ -56,6 +58,7 @@ public:
      bool m_discovering;
      QStringList m_uuids;
      QList<DevicePtr> m_devices;
 +    bool m_connected;
      QString m_modalias;
- };
- 
+     MediaPtr m_media;
+     GattManagerPtr m_gattManager;
 diff --git a/src/imports/declarativeadapter.cpp b/src/imports/declarativeadapter.cpp
-index cdb71a28db215d1d36884463c4d1f0a0bfb8db29..13d2338a10c08afbbb98794c4d9a3f51f4133ca4 100644
+index f0f281e..0ac41c4 100644
 --- a/src/imports/declarativeadapter.cpp
 +++ b/src/imports/declarativeadapter.cpp
-@@ -69,6 +69,8 @@ DeclarativeAdapter::DeclarativeAdapter(BluezQt::AdapterPtr adapter, QObject *par
+@@ -55,6 +55,8 @@ DeclarativeAdapter::DeclarativeAdapter(BluezQt::AdapterPtr adapter, QObject *par
      connect(m_adapter.data(), &BluezQt::Adapter::deviceChanged, this, [this](const BluezQt::DevicePtr &device) {
          Q_EMIT deviceChanged(declarativeDeviceFromPtr(device));
      });
@@ -156,8 +158,8 @@ index cdb71a28db215d1d36884463c4d1f0a0bfb8db29..13d2338a10c08afbbb98794c4d9a3f51
  }
  
  QString DeclarativeAdapter::ubi() const
-@@ -171,6 +173,11 @@ QQmlListProperty<DeclarativeDevice> DeclarativeAdapter::devices()
-     return QQmlListProperty<DeclarativeDevice>(this, nullptr, devicesCountFunction, devicesAtFunction);
+@@ -157,6 +159,11 @@ QQmlListProperty<DeclarativeDevice> DeclarativeAdapter::devices()
+     return QQmlListProperty<DeclarativeDevice>(this, nullptr, devicesCountDeclarativeAdapterFunction, devicesAtDeclarativeAdapterFunction);
  }
  
 +bool DeclarativeAdapter::isConnected() const
@@ -169,10 +171,10 @@ index cdb71a28db215d1d36884463c4d1f0a0bfb8db29..13d2338a10c08afbbb98794c4d9a3f51
  {
      return declarativeDeviceFromPtr(m_adapter->deviceForAddress(address));
 diff --git a/src/imports/declarativeadapter.h b/src/imports/declarativeadapter.h
-index 315e4bd8c835568a93f98f0cf2be6156ab494a7e..13f1456521b2aff334edb4da3d095c25e239fa54 100644
+index 4c4d669..5547cd7 100644
 --- a/src/imports/declarativeadapter.h
 +++ b/src/imports/declarativeadapter.h
-@@ -47,6 +47,7 @@ class DeclarativeAdapter : public QObject
+@@ -33,6 +33,7 @@ class DeclarativeAdapter : public QObject
      Q_PROPERTY(QStringList uuids READ uuids NOTIFY uuidsChanged)
      Q_PROPERTY(QString modalias READ modalias NOTIFY modaliasChanged)
      Q_PROPERTY(QQmlListProperty<DeclarativeDevice> devices READ devices NOTIFY devicesChanged)
@@ -180,16 +182,16 @@ index 315e4bd8c835568a93f98f0cf2be6156ab494a7e..13f1456521b2aff334edb4da3d095c25
  
  public:
      explicit DeclarativeAdapter(BluezQt::AdapterPtr adapter, QObject *parent = nullptr);
-@@ -85,6 +86,8 @@ public:
+@@ -71,6 +72,8 @@ public:
  
      QQmlListProperty<DeclarativeDevice> devices();
  
 +    bool isConnected() const;
 +
      BluezQt::AdapterPtr m_adapter;
-     QHash<QString, DeclarativeDevice*> m_devices;
+     QHash<QString, DeclarativeDevice *> m_devices;
  
-@@ -113,6 +116,7 @@ Q_SIGNALS:
+@@ -99,6 +102,7 @@ Q_SIGNALS:
      void deviceChanged(DeclarativeDevice *device);
  
      void devicesChanged(QQmlListProperty<DeclarativeDevice> devices);

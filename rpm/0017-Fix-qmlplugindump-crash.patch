@@ -5,14 +5,14 @@ Subject: [PATCH] Fix qmlplugindump crash
 
 See also https://bugreports.qt.io/browse/QTBUG-44299
 ---
- src/imports/bluezqtextensionplugin.cpp | 76 ++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 24 deletions(-)
+ src/imports/bluezqtextensionplugin.cpp | 99 +++++++++++++++++---------
+ 1 file changed, 67 insertions(+), 32 deletions(-)
 
 diff --git a/src/imports/bluezqtextensionplugin.cpp b/src/imports/bluezqtextensionplugin.cpp
-index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d1036f39c 100644
+index af5bccb..db23593 100644
 --- a/src/imports/bluezqtextensionplugin.cpp
 +++ b/src/imports/bluezqtextensionplugin.cpp
-@@ -41,32 +41,58 @@ static QObject *manager_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
+@@ -30,40 +30,74 @@ static QObject *manager_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
      return new DeclarativeManager;
  }
  
@@ -27,6 +27,7 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 +    Q_PROPERTY(QString ObexFileTransfer MEMBER ObexFileTransfer CONSTANT)
 +    Q_PROPERTY(QString Headset MEMBER Headset CONSTANT)
 +    Q_PROPERTY(QString AudioSource MEMBER AudioSource CONSTANT)
++    Q_PROPERTY(QString AudioSink MEMBER AudioSink CONSTANT)
 +    Q_PROPERTY(QString AudioVideoRemoteControlTarget MEMBER AudioVideoRemoteControlTarget CONSTANT)
 +    Q_PROPERTY(QString AdvancedAudioDistribution MEMBER AdvancedAudioDistribution CONSTANT)
 +    Q_PROPERTY(QString AudioVideoRemoteControl MEMBER AudioVideoRemoteControl CONSTANT)
@@ -40,6 +41,13 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 +    Q_PROPERTY(QString PhonebookAccessServer MEMBER PhonebookAccessServer CONSTANT)
 +    Q_PROPERTY(QString MessageAccessServer MEMBER MessageAccessServer CONSTANT)
 +    Q_PROPERTY(QString PnpInformation MEMBER PnpInformation CONSTANT)
++    Q_PROPERTY(QString GenericAccess MEMBER GenericAccess CONSTANT)
++    Q_PROPERTY(QString GenericAcces MEMBER GenericAcces CONSTANT)
++    Q_PROPERTY(QString GenericAttribute MEMBER GenericAttribute CONSTANT)
++    Q_PROPERTY(QString ImmediateAlert MEMBER ImmediateAlert CONSTANT)
++    Q_PROPERTY(QString LinkLoss MEMBER LinkLoss CONSTANT)
++    Q_PROPERTY(QString TxPower MEMBER TxPower CONSTANT)
++    Q_PROPERTY(QString HeartRate MEMBER HeartRate CONSTANT)
 +
 +    const QString ServiceDiscoveryServer = BluezQt::Services::ServiceDiscoveryServer;
 +    const QString SerialPort = BluezQt::Services::SerialPort;
@@ -48,6 +56,7 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 +    const QString ObexFileTransfer = BluezQt::Services::ObexFileTransfer;
 +    const QString Headset = BluezQt::Services::Headset;
 +    const QString AudioSource = BluezQt::Services::AudioSource;
++    const QString AudioSink = BluezQt::Services::AudioSink;
 +    const QString AudioVideoRemoteControlTarget = BluezQt::Services::AudioVideoRemoteControlTarget;
 +    const QString AdvancedAudioDistribution = BluezQt::Services::AdvancedAudioDistribution;
 +    const QString AudioVideoRemoteControl = BluezQt::Services::AudioVideoRemoteControl;
@@ -61,6 +70,13 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 +    const QString PhonebookAccessServer = BluezQt::Services::PhonebookAccessServer;
 +    const QString MessageAccessServer = BluezQt::Services::MessageAccessServer;
 +    const QString PnpInformation = BluezQt::Services::PnpInformation;
++    const QString GenericAccess = BluezQt::Services::GenericAccess;
++    const QString GenericAcces = BluezQt::Services::GenericAcces; // TODO KF6: Remove the one with typo
++    const QString GenericAttribute = BluezQt::Services::GenericAttribute;
++    const QString ImmediateAlert = BluezQt::Services::ImmediateAlert;
++    const QString LinkLoss = BluezQt::Services::LinkLoss;
++    const QString TxPower = BluezQt::Services::TxPower;
++    const QString HeartRate = BluezQt::Services::HeartRate;
 +};
 +
 +static QObject *services_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -76,6 +92,7 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 -    object.setProperty(QStringLiteral("ObexFileTransfer"), BluezQt::Services::ObexFileTransfer);
 -    object.setProperty(QStringLiteral("Headset"), BluezQt::Services::Headset);
 -    object.setProperty(QStringLiteral("AudioSource"), BluezQt::Services::AudioSource);
+-    object.setProperty(QStringLiteral("AudioSink"), BluezQt::Services::AudioSink);
 -    object.setProperty(QStringLiteral("AudioVideoRemoteControlTarget"), BluezQt::Services::AudioVideoRemoteControlTarget);
 -    object.setProperty(QStringLiteral("AdvancedAudioDistribution"), BluezQt::Services::AdvancedAudioDistribution);
 -    object.setProperty(QStringLiteral("AudioVideoRemoteControl"), BluezQt::Services::AudioVideoRemoteControl);
@@ -89,17 +106,25 @@ index 015da9affeeb45fd0b42bc97f908b8ebc626debc..e77a1a076662008f283068d8ba58a53d
 -    object.setProperty(QStringLiteral("PhonebookAccessServer"), BluezQt::Services::PhonebookAccessServer);
 -    object.setProperty(QStringLiteral("MessageAccessServer"), BluezQt::Services::MessageAccessServer);
 -    object.setProperty(QStringLiteral("PnpInformation"), BluezQt::Services::PnpInformation);
+-    object.setProperty(QStringLiteral("GenericAccess"), BluezQt::Services::GenericAccess);
+-    object.setProperty(QStringLiteral("GenericAcces"), BluezQt::Services::GenericAccess); // TODO KF6: Remove the one with typo
+-    object.setProperty(QStringLiteral("GenericAttribute"), BluezQt::Services::GenericAttribute);
+-    object.setProperty(QStringLiteral("ImmediateAlert"), BluezQt::Services::ImmediateAlert);
+-    object.setProperty(QStringLiteral("LinkLoss"), BluezQt::Services::LinkLoss);
+-    object.setProperty(QStringLiteral("TxPower"), BluezQt::Services::TxPower);
+-    object.setProperty(QStringLiteral("HeartRate"), BluezQt::Services::HeartRate);
 -    return object;
 +    return new DeclarativeServices;
  }
  
  void BluezQtExtensionPlugin::registerTypes(const char *uri)
-@@ -82,5 +108,7 @@ void BluezQtExtensionPlugin::registerTypes(const char *uri)
-     qmlRegisterUncreatableType<DeclarativeInput>(uri, 1, 0, "Input", QStringLiteral("Input cannot be created"));
+@@ -81,7 +115,8 @@ void BluezQtExtensionPlugin::registerTypes(const char *uri)
      qmlRegisterUncreatableType<DeclarativeMediaPlayer>(uri, 1, 0, "MediaPlayer", QStringLiteral("MediaPlayer cannot be created"));
      qmlRegisterUncreatableType<PendingCall>(uri, 1, 0, "PendingCall", QStringLiteral("PendingCall cannot be created"));
+     qmlRegisterUncreatableType<Rfkill>(uri, 1, 0, "Rfkill", QStringLiteral("Rfkill cannot be created"));
 -    qmlRegisterSingletonType(uri, 1, 0, "Services", services_singleton);
 +    qmlRegisterSingletonType<DeclarativeServices>(uri, 1, 0, "Services", services_singleton);
  }
-+
+ 
+ #include "moc_bluezqtextensionplugin.cpp"
 +#include "bluezqtextensionplugin.moc"

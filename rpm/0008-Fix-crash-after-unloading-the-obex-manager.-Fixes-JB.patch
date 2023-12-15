@@ -13,10 +13,10 @@ pointer.
  1 file changed, 7 insertions(+)
 
 diff --git a/src/obexmanager_p.cpp b/src/obexmanager_p.cpp
-index 05608a85aca8c095d9726fc6e31ccc4b0cd8d13d..7a19e2956c5a77e6eafcf57956e794ee99026875 100644
+index 57690c5..e5c8ff5 100644
 --- a/src/obexmanager_p.cpp
 +++ b/src/obexmanager_p.cpp
-@@ -196,6 +196,13 @@ void ObexManagerPrivate::clear()
+@@ -173,6 +173,13 @@ void ObexManagerPrivate::clear()
      if (m_dbusObjectManager) {
          m_dbusObjectManager->deleteLater();
          m_dbusObjectManager = nullptr;

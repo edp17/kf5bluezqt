@@ -1,18 +1,17 @@
 Name:       kf5bluezqt-bluez5
 Summary:    KF5BluezQt - Qt wrapper for BlueZ 5 DBus API
-Version:    5.50.0
+Version:    5.112.0
 Release:    1
 License:    LGPLv2
 URL:        https://github.com/sailfishos/kf5bluezqt
 Source0:    %{name}-%{version}.tar.bz2
 Provides:   kf5bluezqt
-Conflicts:  kf5bluezqt-bluez4
 
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  cmake
-BuildRequires:  extra-cmake-modules
+BuildRequires:  extra-cmake-modules >= 5.112.0
 BuildRequires:  doxygen
 BuildRequires:  qt5-qttools
 BuildRequires:  qt5-qttools-qthelp-devel
@@ -22,20 +21,24 @@ Requires(postun): /sbin/ldconfig
 Requires: bluez5
 Requires: bluez5-obexd
 
-Patch1:  0001-Generate-pkgconfig-.pc-file.patch
-Patch2:  0002-Add-MediaTransport-org.bluez.MediaTransport1-wrapper.patch
-Patch3:  0003-Add-Manager-pairWithDevice-QString-to-pair-with-unkn.patch
-Patch4:  0004-Check-for-object-validity-in-macros.patch
-Patch5:  0005-Don-t-connect-to-signals-with-QVariantMapMap-paramet.patch
-Patch6:  0006-Expose-adapter.connected-property.-Contributes-to-JB.patch
-Patch7:  0007-Fix-crash-after-unloading-the-obex-manager.-Fixes-JB.patch
-Patch8:  0008-Add-Manager-monitorObjectManagerInterfaces.-Contribu.patch
-Patch9:  0009-Add-filtering-options-to-DeclarativeDevicesModel.-Co.patch
+Patch1:  0001-Expose-adapter.connected-property.-Contributes-to-JB.patch
+Patch2:  0002-Add-filtering-options-to-DeclarativeDevicesModel.-Co.patch
+Patch3:  0003-Add-support-for-KeyboardDisplay-type-agents.patch
+Patch4:  0004-Add-Manager-pairWithDevice-QString-to-pair-with-unkn.patch
+Patch5:  0005-Check-for-object-validity-in-macros.patch
+Patch6:  0006-Don-t-connect-to-signals-with-QVariantMapMap-paramet.patch
+Patch7:  0007-Add-Manager-monitorObjectManagerInterfaces.-Contribu.patch
+Patch8:  0008-Fix-crash-after-unloading-the-obex-manager.-Fixes-JB.patch
+Patch9:  0009-Add-some-missing-includes.patch
 Patch10: 0010-Build-with-Qt-5.6.patch
-Patch11: 0011-Add-support-for-KeyboardDisplay-type-agents.patch
-Patch12: 0012-Force-light-mode-in-Doxygen.patch
-Patch13: 0013-Fix-qmlplugindump-crash.patch
-Patch14: 0014-Add-plugins.qmltypes.patch
+Patch11: 0011-Revert-We-now-require-Qt-5.15.patch
+Patch12: 0012-Avoid-QSharedPointer-assignments-comparisons-to-null.patch
+Patch13: 0013-Revert-qt_add_dbus_interface-back-to-qt5_add_dbus_in.patch
+Patch14: 0014-Revert-minimum-cmake-bump.patch
+Patch15: 0015-Add-back-QtQml-include.patch
+Patch16: 0016-Force-light-mode-in-Doxygen.patch
+Patch17: 0017-Fix-qmlplugindump-crash.patch
+Patch18: 0018-Add-plugins.qmltypes.patch
 
 %description
 This package contains the KF5BluezQt library.
@@ -43,7 +46,6 @@ This package contains the KF5BluezQt library.
 %package declarative
 Summary:    Declarative plugin for kf5bluezqt
 Provides:   kf5bluezqt-declarative
-Conflicts:  kf5bluezqt-bluez4-declarative
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name} = %{version}
 
@@ -53,7 +55,6 @@ This package contains declarative plugin for kf5bluezqt
 %package devel
 Summary:    Development files for kf5bluezqt
 Provides:   kf5bluezqt-devel
-Conflicts:  kf5bluezqt-bluez4-devel
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name} = %{version}
 
@@ -89,10 +90,11 @@ mv %{buildroot}/%{_docdir}/qt5/* %{buildroot}/%{_docdir}/%{name}/
 
 %files
 %defattr(-,root,root,-)
-%license COPYING.LIB
+%license LICENSES/LGPL-2.1-only.txt
 %{_libdir}/libKF5BluezQt.so.*
+%{_datadir}/qlogging-categories5/bluezqt.categories
+%{_datadir}/qlogging-categories5/bluezqt.renamecategories
 %exclude /lib/udev/rules.d/61-kde-bluetooth-rfkill.rules
-%exclude %{_sysconfdir}/xdg/bluez.categories
 
 %files declarative
 %defattr(-,root,root,-)
@@ -102,7 +104,6 @@ mv %{buildroot}/%{_docdir}/qt5/* %{buildroot}/%{_docdir}/%{name}/
 %defattr(-,root,root,-)
 %{_libdir}/libKF5BluezQt.so
 %{_libdir}/pkgconfig/KF5BluezQt.pc
-%{_includedir}/KF5/bluezqt_version.h
 %{_includedir}/KF5/BluezQt
 %{_libdir}/cmake/KF5BluezQt
 %exclude %{_datadir}/qt5/mkspecs/modules/qt_BluezQt.pri

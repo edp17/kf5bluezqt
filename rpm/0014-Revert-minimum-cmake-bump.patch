@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Wed, 13 Dec 2023 16:40:30 +0200
+Subject: [PATCH] Revert minimum cmake bump
+
+Interesting enough, the newer version seemed to have side-effect of
+breaking the build due to some duplicate symbols getting compiled.
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bb976e..20404ce 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.16)
++cmake_minimum_required(VERSION 3.5)
+ 
+ set(KF_VERSION "5.112.0") # handled by release scripts
+ project(BluezQt VERSION ${KF_VERSION})
