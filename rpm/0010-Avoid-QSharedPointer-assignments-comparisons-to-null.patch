@@ -12,7 +12,7 @@ These require Qt 5.8.
  4 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/device_p.cpp b/src/device_p.cpp
-index 52ca525..1bdfa5a 100644
+index 6901664..d4ed7f1 100644
 --- a/src/device_p.cpp
 +++ b/src/device_p.cpp
 @@ -210,14 +210,14 @@ void DevicePrivate::removeGattService(const QString &gattServicePath)
@@ -59,10 +59,10 @@ index 9a7aec7..3d6d155 100644
          if (service->characteristics().at(i)->ubi() == gattCharacteristicPath) {
              gattCharacteristic = service->characteristics().at(i);
 diff --git a/src/manager.cpp b/src/manager.cpp
-index 199428d..9660d11 100644
+index 3ce90dd..539a7d8 100644
 --- a/src/manager.cpp
 +++ b/src/manager.cpp
-@@ -247,7 +247,7 @@ PendingCall *Manager::unregisterProfile(Profile *profile)
+@@ -233,7 +233,7 @@ PendingCall *Manager::unregisterProfile(Profile *profile)
  #if BLUEZQT_BUILD_DEPRECATED_SINCE(5, 57)
  MediaPtr Manager::media() const
  {

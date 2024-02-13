@@ -5,8 +5,8 @@ Subject: [PATCH] Add plugins.qmltypes
 
 ---
  src/imports/CMakeLists.txt   |   6 +
- src/imports/plugins.qmltypes | 635 +++++++++++++++++++++++++++++++++++
- 2 files changed, 641 insertions(+)
+ src/imports/plugins.qmltypes | 630 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 636 insertions(+)
  create mode 100644 src/imports/plugins.qmltypes
 
 diff --git a/src/imports/CMakeLists.txt b/src/imports/CMakeLists.txt
@@ -25,10 +25,10 @@ index 85f9862..79b83c4 100644
 +  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 diff --git a/src/imports/plugins.qmltypes b/src/imports/plugins.qmltypes
 new file mode 100644
-index 0000000..8fb94f1
+index 0000000..afc7906
 --- /dev/null
 +++ b/src/imports/plugins.qmltypes
-@@ -0,0 +1,635 @@
+@@ -0,0 +1,630 @@
 +import QtQuick.tooling 1.2
 +
 +// This file describes the plugin-supplied types contained in the library.
@@ -46,7 +46,6 @@ index 0000000..8fb94f1
 +        Property { name: "operational"; type: "bool"; isReadonly: true }
 +        Property { name: "bluetoothOperational"; type: "bool"; isReadonly: true }
 +        Property { name: "bluetoothBlocked"; type: "bool" }
-+        Property { name: "monitorObjectManagerInterfaces"; type: "bool" }
 +        Property { name: "usableAdapter"; type: "AdapterPtr"; isReadonly: true }
 +        Property { name: "adapters"; type: "QList<AdapterPtr>"; isReadonly: true }
 +        Property { name: "devices"; type: "QList<DevicePtr>"; isReadonly: true }
@@ -62,10 +61,6 @@ index 0000000..8fb94f1
 +        Signal {
 +            name: "bluetoothBlockedChanged"
 +            Parameter { name: "blocked"; type: "bool" }
-+        }
-+        Signal {
-+            name: "monitorObjectManagerInterfacesChanged"
-+            Parameter { name: "enabled"; type: "bool" }
 +        }
 +        Signal {
 +            name: "adapterAdded"

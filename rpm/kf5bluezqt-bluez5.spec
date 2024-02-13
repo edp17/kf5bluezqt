@@ -26,19 +26,17 @@ Patch2:  0002-Add-filtering-options-to-DeclarativeDevicesModel.-Co.patch
 Patch3:  0003-Add-support-for-KeyboardDisplay-type-agents.patch
 Patch4:  0004-Add-Manager-pairWithDevice-QString-to-pair-with-unkn.patch
 Patch5:  0005-Check-for-object-validity-in-macros.patch
-Patch6:  0006-Don-t-connect-to-signals-with-QVariantMapMap-paramet.patch
-Patch7:  0007-Add-Manager-monitorObjectManagerInterfaces.-Contribu.patch
-Patch8:  0008-Fix-crash-after-unloading-the-obex-manager.-Fixes-JB.patch
-Patch9:  0009-Add-some-missing-includes.patch
-Patch10: 0010-Build-with-Qt-5.6.patch
-Patch11: 0011-Revert-We-now-require-Qt-5.15.patch
-Patch12: 0012-Avoid-QSharedPointer-assignments-comparisons-to-null.patch
-Patch13: 0013-Revert-qt_add_dbus_interface-back-to-qt5_add_dbus_in.patch
-Patch14: 0014-Revert-minimum-cmake-bump.patch
-Patch15: 0015-Add-back-QtQml-include.patch
-Patch16: 0016-Force-light-mode-in-Doxygen.patch
-Patch17: 0017-Fix-qmlplugindump-crash.patch
-Patch18: 0018-Add-plugins.qmltypes.patch
+Patch6:  0006-Fix-crash-after-unloading-the-obex-manager.-Fixes-JB.patch
+Patch7:  0007-Add-some-missing-includes.patch
+Patch8:  0008-Build-with-Qt-5.6.patch
+Patch9:  0009-Revert-We-now-require-Qt-5.15.patch
+Patch10: 0010-Avoid-QSharedPointer-assignments-comparisons-to-null.patch
+Patch11: 0011-Revert-qt_add_dbus_interface-back-to-qt5_add_dbus_in.patch
+Patch12: 0012-Revert-minimum-cmake-bump.patch
+Patch13: 0013-Add-back-QtQml-include.patch
+Patch14: 0014-Force-light-mode-in-Doxygen.patch
+Patch15: 0015-Fix-qmlplugindump-crash.patch
+Patch16: 0016-Add-plugins.qmltypes.patch
 
 %description
 This package contains the KF5BluezQt library.
